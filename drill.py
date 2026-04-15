@@ -14,7 +14,6 @@ from sklearn.model_selection import train_test_split, cross_val_score, Stratifie
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-df = pd.read_csv("C:\\Users\\AYMAN\\m5-d5a-classification-basics-DeemaAhmad100\\data\\telecom_churn.csv")
 
 def split_data(df, target_col="churned", test_size=0.2, random_state=42):
     """Split a DataFrame into train and test sets with stratification.
@@ -57,25 +56,36 @@ def compute_classification_metrics(y_true, y_pred):
 
 
 def run_cross_validation(X_train, y_train, n_folds=5, random_state=42):
-    """Run stratified k-fold cross-validation with LogisticRegression.
+   
+    """Run stratified k-fold cross-validation with LogisticRegression."""
 
-    Args:
-        X_train: Training features (numeric only).
-        y_train: Training labels.
-        n_folds: Number of CV folds.
-        random_state: Random seed.
+   
+    model = LogisticRegression(
+        random_state=random_state, 
+        max_iter=1000, 
+        class_weight="balanced"
+    )
 
-    Returns:
-        Dictionary with keys: 'scores' (array of fold scores),
-        'mean' (float), 'std' (float).
-    """
-    model = LogisticRegression(random_state=random_state, max_iter=1000, class_weight="balanced")
-    scores = cross_val_score(model, X_train, y_train, cv= n_folds, random_state=random_state, scoring="accuracy")
+
+    scores = cross_val_score(
+        model, 
+        X_train, 
+        y_train, 
+        cv=n_folds, 
+        scoring="accuracy"
+    )
+
+  
     mean_score = float(scores.mean())
-    std_score = float(scores.std()
-                      
-        )
-    return {"scores": scores, "mean": mean_score, "std": std_score}
+    std_score = float(scores.std())
+
+  
+    return {
+        "scores": scores,
+        "mean": mean_score,
+        "std": std_score
+    }
+
 
 if __name__ == "__main__":
     # Load data
